@@ -5,13 +5,18 @@
  */
 package com.appsoil.bias.rest;
 
-import com.appsoil.BiasSessionBean;
+import com.appsoil.bias.Bias;
+import com.appsoil.bias.BiasService;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.RequestScoped;
+import javax.ws.rs.Consumes;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -20,15 +25,21 @@ import javax.ws.rs.Produces;
 @Path("bar")
 @RequestScoped
 public class TestWS {
+
     @EJB
-    private BiasSessionBean biasSessionBean;
+    private BiasService biasService;
 
     @GET
-    @Produces("text/html")
-    public String getTest() {
-        return biasSessionBean.getMessage();
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Bias> getBiases() {
+        return biasService.getAllBiases();
     }
 
-// Add business logic below. (Right-click in editor and choose
-    // "Web Service > Add Operation"
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void setBiases(List<Bias> biases) {
+        for (Bias b : biases) {
+            biasService.add(b);
+        }
+    }
 }
